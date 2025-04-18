@@ -8,10 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          # super-linter needs the full git history to get the
+          # list of files that changed across commits
+          fetch-depth: 0
 
       - name: Run Super-Linter
-        uses: github/super-linter@v4
+        uses: github/super-linter@latest
+        with:
+          # VALIDATE_GO should be set to false 
+          # if VALIDATE_GO_MODULES is true
+          VALIDATE_GO: false
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
