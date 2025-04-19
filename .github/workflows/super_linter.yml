@@ -16,10 +16,10 @@ jobs:
 
       - name: Run Super-Linter
         uses: github/super-linter@latest
-        with:
+        # with:
           # VALIDATE_GO should be set to false 
           # if VALIDATE_GO_MODULES is true
-          VALIDATE_GO: false
+        #   VALIDATE_GO: false
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

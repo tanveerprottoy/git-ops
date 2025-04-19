@@ -1,0 +1,13 @@
+docker run /
+-e RUN_LOCAL=true /
+-v /home/tanveer/Dev/DevOps/git-ops:/tmp/lint /
+--rm / 
+github/super-linter:latest
+
+
+# Run it on all Go files in the current directory and subdirectories
+goimports -w .
+
+# Or run it on specific files/directories
+# goimports -w path/to/your/file.go
+# goimports -w path/to/your/gopackage/...
