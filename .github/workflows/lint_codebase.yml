@@ -1,11 +1,19 @@
-name: Super-Linter
+# This workflow uses the GitHub Super-Linter to lint the codebase.
+name: Lint Codebase
 
-on: push
+on: [push, pull_request]
 
 jobs:
   super-lint:
-    name: Lint code base
+    name: Lint
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -14,12 +22,8 @@ jobs:
           # list of files that changed across commits
           fetch-depth: 0
 
-      - name: Run Super-Linter
-        uses: github/super-linter@latest
-        # with:
-          # VALIDATE_GO should be set to false 
-          # if VALIDATE_GO_MODULES is true
-        #   VALIDATE_GO: false
+      - name: Run Linter
+        uses: super-linter/super-linter@v7
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
