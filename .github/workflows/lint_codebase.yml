@@ -1,7 +1,16 @@
-# This workflow uses the GitHub Super-Linter to lint the codebase.
+# This workflow runs a linter on the codebase to ensure code quality and consistency
 name: Lint Codebase
 
-on: [push, pull_request]
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+# [push, pull_request]
 
 permissions: {}
 
