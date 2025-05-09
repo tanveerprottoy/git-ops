@@ -19,7 +19,7 @@ on:
 jobs:
   unit-test:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    uses: ./.github/workflows/unit_test.yml
+    uses:    ./.github/workflows/unit_test.yml
 
   docker-push:
     runs-on: ubuntu-latest

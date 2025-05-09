@@ -1,0 +1,67 @@
+name: Run Unit Tests
+
+# on:
+#   workflow_run:
+#     types:
+#       - completed # Trigger when the "Lint Codebase" workflow finishes
+#     workflows: 
+#       - "Lint Codebase" # Name of the workflow file to wait for
+
+on: 
+  # will be called by unit_test.yml
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner
+    # needs: ["Lint Codebase"] # Ensure this job runs after the Lint Codebase job completes successfully
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: . # Assumes Dockerfile is in the root directory
+          # Optional: Specify Dockerfile path if not in root context
+          file: ./Dockerfile.test
+          builder: ${{ steps.buildx.outputs.name }}
+          push: false # Do not push the image
+          tags: git-ops-go:${{ github.sha }} # Tag the image locally, using commit SHA for uniqueness
+          load: true # Load the image into the local Docker daemon for testing
+          cache-from: type=gha # Enable GitHub Actions cache for Docker layers
+          cache-to: type=gha,mode=max # Write to GitHub Actions cache
+
+    #   - name: Run container from built image
+    #     id: run_container
+    #     run: |
+    #       # Run the container in detached mode (-d) and give it a name
+    #       # Add any necessary port mappings (-p) or environment variables (-e) here
+    #       docker run -d --name git-ops-go-container git-ops-go:${{ github.sha }}
+
+    #       # Optional: Add a small delay or a health check loop to ensure the service inside the container is ready
+    #       echo "Waiting for container to start..."
+    #       sleep 15 # Adjust sleep time as needed, or implement a proper health check
+
+    #   - name: Run tests against the container
+    #     run: |
+    #       echo "Running tests..."
+    #       # Example: Execute a test command *inside* the container
+    #       # Replace 'your-test-command --with --args' with your actual test execution command
+    #       # e.g., 'npm test', 'pytest', 'mvn test', './scripts/run-tests.sh'
+    #       docker exec git-ops-go-container go test -v ./...
+
+      - name: Stop and remove container
+        # Always run this step to ensure cleanup, even if previous steps fail
+        if: always()
+        run: |
+          echo "Cleaning up container..."
+          # docker stop git-ops-go-container || true # Ignore error if container already stopped
+          docker rm git-ops-go-container || true # Ignore error if container already removed
+
+
