@@ -32,3 +32,14 @@ jobs:
           context: .
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/my-repo:git-ops-go
+
+        
+          # Attestations
+          # SBOM (Software Bill of Materials) and provenance attestations improve security and traceability, ensuring your images meet modern software supply chain requirements.
+          # With a small amount of additional configuration, you can configure docker/build-push-action to generate Software Bill of Materials (SBOM) and provenance attestations for the image, at build-time.
+          # To generate this additional metadata, you need to make two changes to your workflow:
+          # Before the build step, add a step that uses docker/setup-buildx-action. This action configures your Docker build client with additional capabilities that the default client doesn't support.
+          # Then, update the Build and push Docker image step to also enable SBOM and provenance attestations.
+          # annotations: ${{ steps.meta.outputs.annotations }}
+          # provenance: true
+          # sbom: true
