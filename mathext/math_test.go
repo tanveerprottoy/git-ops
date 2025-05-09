@@ -28,6 +28,7 @@ func TestAdd(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			actual := mathext.Add(tc.val0, tc.val1)
 			
+			// check with the actual value
 			if actual != tc.exp {
 				t.Errorf("Add(%d, %d) = %v; want %v", tc.val0, tc.val1, actual, tc.exp)
 			}
