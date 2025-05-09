@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	"github.com/tanveerprottoy/git-ops/mathext"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAdd(t *testing.T) {
@@ -25,9 +27,13 @@ func TestAdd(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			actual := mathext.Add(tc.val0, tc.val1)
+			
 			if actual != tc.exp {
 				t.Errorf("Add(%d, %d) = %v; want %v", tc.val0, tc.val1, actual, tc.exp)
 			}
+
+			// optional: check with assert
+			assert.Equal(t, tc.exp, actual, "Add(%d, %d) = %v; want %v", tc.val0, tc.val1, actual, tc.exp)
 		})
 	}
 }
