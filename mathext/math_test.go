@@ -22,6 +22,7 @@ func TestAdd(t *testing.T) {
 		{"2 + 5", 2, 5, 7},
 		{"9 + 5", 9, 5, 14},
 		{"27 + 45", 27, 45, 72},
+		{"1 + 1", 1, 1, 3}, // fail test case
 	}
 
 	for _, tc := range tests {
