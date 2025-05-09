@@ -11,13 +11,6 @@ COPY ./ ./
 
 RUN go build -o ./app ./cmd/main.go
 
-# unit test stage
-# Run the tests in the container
-# can run it by using "docker build -t git-ops-go --progress plain 
-# --no-cache --target run-unit-tests ."
-FROM build AS run-unit-tests
-RUN go test -v ./...
-
 # deploy stage
 # FROM golang:1.23-alipine AS deploy
 FROM gcr.io/distroless/base-debian12 AS deploy
@@ -32,4 +25,3 @@ EXPOSE 8080
 USER nonroot:nonroot
 
 ENTRYPOINT [ "./app" ]
-

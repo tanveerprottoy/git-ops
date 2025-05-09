@@ -31,4 +31,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/git-ops:1.0
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/my-repo:git-ops-go
