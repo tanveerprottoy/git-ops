@@ -12,6 +12,4 @@ func main() {
 
 	// add two numbers using the mathext package
 	log.Println("Adding 7 + 4 =", mathext.Add(7, 4))
-
-	bbaa
 }
