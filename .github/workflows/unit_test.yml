@@ -1,16 +1,20 @@
-name: Build Docker Image and Run Unit Tests
+name: Run Unit Tests
 
-on:
-  workflow_run:
-    types:
-      - completed # Trigger when the "Lint Codebase" workflow finishes
-    workflows: ["Lint Codebase"] # Name of the workflow file to wait for
+# on:
+#   workflow_run:
+#     types:
+#       - completed # Trigger when the "Lint Codebase" workflow finishes
+#     workflows: 
+#       - "Lint Codebase" # Name of the workflow file to wait for
+
+on: 
+  # will be called by unit_test.yml
+  workflow_call:
 
 jobs:
   build:
     runs-on: ubuntu-latest # Use the latest Ubuntu runner
     # needs: ["Lint Codebase"] # Ensure this job runs after the Lint Codebase job completes successfully
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
