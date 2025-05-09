@@ -2,31 +2,35 @@ name: Build and Push Docker Container
 
 on:
   workflow_run:
-    workflows: ["Build Docker Image and Run Unit Tests"] # Name of the workflow file to wait for
     types:
       - completed # Trigger when the "Build Docker Image and Run Unit Tests" workflow finishes
+    workflows:
+      - "Build Docker Image and Run Unit Tests" # Name of the workflow file to wait for
+    branches:
+      - main
 
 jobs:
-  docker:
+  docker_push:
     runs-on: ubuntu-latest
+    # needs: ["Build Docker Image and Run Unit Tests"] # Ensure this job runs after the Lint Codebase job completes successfully
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
-      -
-        name: Login to Docker Hub
+      
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Set up QEMU
+      
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
+      
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      -
-        name: Build and push
+      
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
