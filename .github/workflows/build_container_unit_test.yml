@@ -56,7 +56,7 @@ jobs:
         if: always()
         run: |
           echo "Cleaning up container..."
-          docker stop git-ops-go-container || true # Ignore error if container already stopped
+          # docker stop git-ops-go-container || true # Ignore error if container already stopped
           docker rm git-ops-go-container || true # Ignore error if container already removed
 
 
