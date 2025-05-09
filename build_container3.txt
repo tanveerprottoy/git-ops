@@ -1,4 +1,4 @@
-name: Build Docker Image and Run Unit Tests
+name: Build Docker Image
 
 on:
   workflow_run:
@@ -24,7 +24,7 @@ jobs:
         with:
           context: . # Assumes Dockerfile is in the root directory
           # Optional: Specify Dockerfile path if not in root context
-          file: ./Dockerfile.test
+          # file: ./path/to/your/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: false # Do not push the image
           tags: git-ops-go:${{ github.sha }} # Tag the image locally, using commit SHA for uniqueness
@@ -37,7 +37,10 @@ jobs:
         run: |
           # Run the container in detached mode (-d) and give it a name
           # Add any necessary port mappings (-p) or environment variables (-e) here
-          docker run -d --name git-ops-go-container git-ops-go:${{ github.sha }}
+          docker run -d --name my-app-container git-ops-go:${{ github.sha }}
+
+          docker build -f Dockerfile.test -t git-ops-go --progress plain 
+# --no-cache --target run-unit-tests .
 
           # Optional: Add a small delay or a health check loop to ensure the service inside the container is ready
           echo "Waiting for container to start..."
@@ -49,14 +52,63 @@ jobs:
           # Example: Execute a test command *inside* the container
           # Replace 'your-test-command --with --args' with your actual test execution command
           # e.g., 'npm test', 'pytest', 'mvn test', './scripts/run-tests.sh'
-          docker exec git-ops-go-container go test -v ./...
+          docker exec my-app-container your-test-command --with --args
+
+          # --- OR ---
+          # Example: If your container runs a web service (e.g., on port 8080 mapped to host's 8080)
+          # You might run tests from the runner *against* the container's exposed service
+          # Make sure you added '-p 8080:8080' to the 'docker run' command above
+          # curl --fail http://localhost:8080/health || exit 1
+          # ./run-e2e-tests.sh http://localhost:8080
 
       - name: Stop and remove container
         # Always run this step to ensure cleanup, even if previous steps fail
         if: always()
         run: |
           echo "Cleaning up container..."
-          docker stop git-ops-go-container || true # Ignore error if container already stopped
-          docker rm git-ops-go-container || true # Ignore error if container already removed
+          docker stop my-app-container || true # Ignore error if container already stopped
+          docker rm my-app-container || true # Ignore error if container already removed
 
 
+name: Build Docker Image and Run Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions: {}
+
+jobs:
+  build-and-test:
+    name: Build Docker Image and Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Docker Buildx (optional for multi-platform builds)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Step 3: Log in to Docker Hub (optional, if pushing to Docker Hub)
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Step 4: Build the Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t my-app:latest .
+
+      # Step 5: Run tests inside the Docker container
+      - name: Run tests
+        run: |
+          docker run --rm my-app:latest go test ./... -v
