@@ -22,7 +22,7 @@ func TestAdd(t *testing.T) {
 		{"2 + 5", 2, 5, 7},
 		{"9 + 5", 9, 5, 14},
 		{"27 + 45", 27, 45, 72},
-		{"1 + 1", 1, 1, 3}, // fail test case
+		// {"1 + 1", 1, 1, 3}, // fail test case, will cause ci to fail and the docker image will not be pushed
 	}
 
 	for _, tc := range tests {
