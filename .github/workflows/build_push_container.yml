@@ -45,7 +45,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/my-repo:git-ops-go
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/my-repo:git-ops-go-test
 
         
           # Attestations
