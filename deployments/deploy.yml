@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-private-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-private-app
+  template:
+    metadata:
+      labels:
+        app: my-private-app
+    spec:
+      containers:
+      - name: my-private-app-container
+        image: yourdockerhubusername/yourprivateimage:tag
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: my-dockerhub-secret # Name of the secret you created
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: my-app
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: my-app
+#   template:
+#     metadata:
+#       labels:
+#         app: my-app
+#     spec:
+#       containers:
+#         - name: my-app
+#           image: <DOCKERHUB_USERNAME>/my-repo:git-ops-go
+#           ports:
+#             - containerPort: 8080
