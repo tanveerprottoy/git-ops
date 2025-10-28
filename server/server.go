@@ -30,28 +30,45 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleGet(w http.ResponseWriter, r *http.Request) {
+	log.Printf("request header: %v\n", r.Header)
+
 	msg := fmt.Sprintf("Hello, from GET Handler. Adding 2 + 3 = %d", mathext.Add(2, 3))
 	log.Println(msg)
-	w.Write([]byte(msg))
+
+	i, err := w.Write([]byte(msg))
+	log.Printf("i: %d, err: %s", i, err.Error())
 }
 
 func handlePost(w http.ResponseWriter, r *http.Request) {
+	log.Printf("request header: %v\n", r.Header)
+
 	msg := fmt.Sprintf("Hello, from POST Handler. Adding 1 + 4 = %d", mathext.Add(1, 4))
 	log.Println(msg)
-	w.Write([]byte(msg))
+
+	i, err := w.Write([]byte(msg))
+	log.Printf("i: %d, err: %s", i, err.Error())
 }
 
+// PUT: Update item by ID (expects /{id} as path param)
 func handlePut(w http.ResponseWriter, r *http.Request) {
+	log.Printf("request header: %v\n", r.Header)
+
 	msg := fmt.Sprintf("Hello, from PUT Handler. Adding 2 + 1 = %d", mathext.Add(2, 1))
 	log.Println(msg)
-	w.Write([]byte(msg))
+
+	i, err := w.Write([]byte(msg))
+	log.Printf("i: %d, err: %s", i, err.Error())
 }
 
-// DELETE: Remove item by ID (expects ?id=xyz query param)
+// DELETE: Remove item by ID (expects /{id} as path param)
 func handleDelete(w http.ResponseWriter, r *http.Request) {
+	log.Printf("request header: %v\n", r.Header)
+
 	msg := fmt.Sprintf("Hello, from DELETE Handler. Adding 6 + 5 = %d", mathext.Add(6, 5))
 	log.Println(msg)
-	w.Write([]byte(msg))
+
+	i, err := w.Write([]byte(msg))
+	log.Printf("i: %d, err: %s", i, err.Error())
 }
 
 func Serve() {
