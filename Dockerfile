@@ -19,7 +19,7 @@ WORKDIR /app
 
 COPY --from=build /app/app ./
 
-EXPOSE 8080
+EXPOSE 8081
 
 # needed for distroless base
 USER nonroot:nonroot
